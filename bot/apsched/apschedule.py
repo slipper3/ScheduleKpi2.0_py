@@ -1,0 +1,1 @@
+# --- This file is responsible for sending scheduled messages ---

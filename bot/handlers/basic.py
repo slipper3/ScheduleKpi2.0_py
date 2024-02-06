@@ -6,3 +6,9 @@ async def startup(bot: Bot) -> None:
 
 async def shoutdown(bot: Bot) -> None:
     print("Bot is ofline")
+
+async def start() -> None:
+    pass
+
+async def info() -> None:
+    pass
