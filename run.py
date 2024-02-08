@@ -17,10 +17,10 @@ async def main() -> None:
     """ Starting bot """
 
     dp = Dispatcher()
+    await register_routers(dp)
 
     try:
         await dp.start_polling(bot)
-        register_routers(dp)
     finally:
         await bot.session.close()
     
