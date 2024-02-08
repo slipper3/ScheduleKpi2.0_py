@@ -65,7 +65,7 @@ async def db_remove_group(chatid) -> None:
             port=port
         )
         with conn.cursor() as cursor:
-            cursor.execute("""DELETE FROM public.telegram WHERE chatid = (%s)""", (chatid))
+            cursor.execute("""DELETE FROM public.telegram WHERE chatid = (%s)""", (chatid,))
         return True
     except Exception as er:
         #log error
@@ -93,7 +93,7 @@ async def db_get_group(chatid):
             port=port
         )
         with conn.cursor() as cursor:
-            cursor.execute("""SELECT groupname FROM public.telegram WHERE chatid = (%s)""", (chatid))
+            cursor.execute("""SELECT groupname FROM public.telegram WHERE chatid = (%s)""", (chatid,))
             result = cursor.fetchone()
         return result[0]
     except Exception as er:
