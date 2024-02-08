@@ -2,7 +2,12 @@
 from bot.data.scheduledata import *
 from datetime import datetime
 import pytz
+
 from aiogram import Bot, types
+
+import random
+from bot.utils.stikers import stickers
+
 
 template = {
     0: "Пн",
@@ -13,6 +18,7 @@ template = {
     5: "Сб",
     6: "Нд"
 }
+
 
 async def schedul(time: str, bot: Bot):
     """Send message to all registered in database chats\n
@@ -44,7 +50,7 @@ async def schedul(time: str, bot: Bot):
                             f"<a href='{pair[2]}'>Посилання на пару</a>\n"
                         ]
                 await bot.send_message(chat_id=chat, text='\n'.join(text), parse_mode='HTML')
-                #await bot.send_sticker(chat_id=chat)
+                await bot.send_sticker(chat_id=chat, sticker=stickers[random.randint(0,len(stickers)-1)])
             elif pair[1] != "" and pair[0] != "":
                 text = [
                             f"💃 <b>О {time} вас чекає пара</b> 🕺\n",
@@ -52,18 +58,18 @@ async def schedul(time: str, bot: Bot):
                             f"🔸Разом з {pair[1]}\n",
                         ]
                 await bot.send_message(chat_id=chat, text='\n'.join(text), parse_mode='HTML')
-                # await bot.send_sticker(chat_id=chat)
+                await bot.send_sticker(chat_id=chat, sticker=stickers[random.randint(0,len(stickers)-1)])
             elif pair[0] != "":
                 text = [
                             f"💃 <b>О {time} вас чекає пара</b> 🕺\n",
                             f"🔸{pair[0]})",
                         ]
                 await bot.send_message(chat_id=chat, text='\n'.join(text), parse_mode='HTML')
-                # await bot.send_sticker(chat_id=chat)
+                await bot.send_sticker(chat_id=chat, sticker=stickers[random.randint(0,len(stickers)-1)])
             else:
                 text = [
                             f"💃 <b>О {time} вас чекає пара</b> 🕺\n",
                             f"🔸{pair[0]})",
                         ]
                 await bot.send_message(chat_id=chat, text='\n'.join(text), parse_mode='HTML')
-                # await bot.send_sticker(chat_id=chat)
+                await bot.send_sticker(chat_id=chat, sticker=stickers[random.randint(0,len(stickers)-1)])

@@ -45,3 +45,8 @@ async def get_group(message: types.Message) -> None:
     if groupName != None:
         await message.answer(f"Ваша група: {groupName}")
     else: await message.answer("До вашого чату група не прикріплена")
+
+@user_router.message(Command("emoji"))
+async def config_emoji(message: types.Message):
+    status = await db_condig_emoji(message.chat.id)
+    await message.answer(f"Статус емоджі в вашому чаті змінено на: {status}")

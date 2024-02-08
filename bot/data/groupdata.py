@@ -103,3 +103,31 @@ async def db_get_group(chatid):
     finally:
         conn.commit()
         conn.close()
+
+async def db_condig_emoji(chatid) -> str:
+
+    # Check sql request
+    if await kapcha(chatid, "chatID") == False:
+        return False
+    
+    try:
+        conn = psycopg2.connect(
+            host=host,
+            dbname=dbname,
+            user=user,
+            password=password,
+            port=port
+        )
+        with conn.cursor() as cursor:
+            cursor.execute("""SELECT emoji FROM public.telegram WHERE chatid = (%s)""", (chatid,))
+            result = cursor.fetchone()
+            state = not result[0]
+            cursor.execute("""UPDATE public.telegram SET emoji = (%s::boolean) WHERE chatid = (%s)""", (state, chatid))
+        return str(state)
+    except Exception as er:
+        #log error
+        print("query error", er)
+        return None
+    finally:
+        conn.commit()
+        conn.close()
