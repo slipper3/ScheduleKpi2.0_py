@@ -2,6 +2,7 @@
 
 import psycopg2
 from bot.data.kapcha import kapcha
+from datetime import datetime
 
 # --- Load database config ---
 import os
@@ -15,14 +16,15 @@ user = os.getenv("USER")
 password = os.getenv("PASSWORD")
 port = os.getenv("PORT")
 
-
+ 
 # --- Get data from database ---
-async def get_schedule_data(chatid, weektype):
+async def get_schedule_data(chatid: int, weektype: str, day: str, time: str):
     """Gets value of `chatid` - id of chat that linked with group\n
     Return linked group\`s schedule as JSON object"""
 
     # Check sql request
     if await kapcha(chatid, "chatID") == False:
+        print("incorect id")
         return False
     
     # get weektype
@@ -41,10 +43,31 @@ async def get_schedule_data(chatid, weektype):
                            JOIN public.groups ON telegram.groupname = groups.groupname 
                            WHERE (telegram.chatid) = (%s)""", (chatid,))
             result = cursor.fetchone()
-            cursor.execute("""SELECT dayofweek, lessontime, lessonname, teachername, link 
+            cursor.execute("""SELECT lessonname, teachername, link 
                            FROM public.groups 
                            JOIN public.schedule ON groups.groupid = schedule.groupid 
-                           WHERE (schedule.groupid) = (%s) AND schedule.weektype = (%s)""",(result[0], weektype))
+                           WHERE (schedule.groupid) = (%s) AND schedule.weektype = (%s) AND schedule.dayofweek = (%s) AND schedule.lessontime = (%s)""",(result[0], weektype, day, time))
+            result = cursor.fetchall()
+        return result
+    except Exception as er:
+        print("Request error", er)
+        return None
+    finally:
+        conn.commit()
+        conn.close()
+
+async def get_chats():
+    """Return chats\`s id as array"""
+    try:
+        conn = psycopg2.connect(
+            host=host,
+            dbname=dbname,
+            user=user,
+            password=password,
+            port=port
+        )
+        with conn.cursor() as cursor:
+            cursor.execute("""SELECT chatid FROM public.telegram""")
             result = cursor.fetchall()
         return result
     except Exception as er:
