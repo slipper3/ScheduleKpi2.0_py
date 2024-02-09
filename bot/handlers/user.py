@@ -1,21 +1,34 @@
 from aiogram import Bot, types, Router
 from aiogram.filters import Command
+from bot_intance import bot
 
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 
 from bot.data.groupdata import *
+from bot.utils.texts import *
+from bot.keyboards.keyboards import *
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 user_router = Router()
 
 @user_router.message(Command("start"))
 async def start(message: types.Message) -> None:
-    await message.answer("Hi")
+    await message.answer(await start_text(), reply_markup=await start_keyboard(), parse_mode='HTML')
 
 
 @user_router.message(Command("info"))
 async def info(message: types.Message) -> None:
-    pass
+    await message.answer(await info_text(), reply_markup=await info_keyboard(), parse_mode='HTML')
+
+
+@user_router.message(Command("menu"))
+async def menu(message: types.Message) -> None:
+    await message.answer(await menu_text(), reply_markup=await menu_keyboard(), parse_mode='HTML')
 
 
 class states(StatesGroup):
@@ -46,7 +59,24 @@ async def get_group(message: types.Message) -> None:
         await message.answer(f"Ваша група: {groupName}")
     else: await message.answer("До вашого чату група не прикріплена")
 
+
 @user_router.message(Command("emoji"))
-async def config_emoji(message: types.Message):
+async def config_emoji(message: types.Message) -> None:
     status = await db_condig_emoji(message.chat.id)
     await message.answer(f"Статус емоджі в вашому чаті змінено на: {status}")
+
+
+@user_router.message(Command("wed"))
+async def web(message: types.Message) -> None:
+    await message.answer("Тут буде лінк на сайт")
+
+
+@user_router.message(Command("report"))
+async def set_group(message: types.Message, state: FSMContext) -> None:
+    await state.set_state(states.group)
+    await message.answer("Напишіть своє повідомленя 📝")
+@user_router.message(states.group)
+async def save_group(message: types.Message, state: FSMContext) -> None:
+    await bot.send_message(chat_id=int(os.getenv("ADMIN_ID")), text=f"#report\n\n{message.text}")
+    await message.answer("Ваше повідомлення було надіслано розробнику.")
+    await state.clear()

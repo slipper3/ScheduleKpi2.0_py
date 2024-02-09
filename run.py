@@ -2,6 +2,7 @@ from bot_intance import bot
 # --- Including all routers ---
 from bot.handlers.admin import admin_router
 from bot.handlers.user import user_router
+from bot.handlers.callbacks import callback_router
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from bot.utils.apschedule import schedul
@@ -12,8 +13,7 @@ from aiogram import Dispatcher
 
 async def register_routers(dp: Dispatcher) -> None:
     """ Including routers to the main dispatcher """
-    dp.include_router(admin_router)
-    dp.include_router(user_router)
+    dp.include_routers(admin_router, user_router, callback_router)
 
 
 async def main() -> None:
