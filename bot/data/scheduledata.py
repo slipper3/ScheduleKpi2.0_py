@@ -16,13 +16,14 @@ user = os.getenv("USER")
 password = os.getenv("PASSWORD")
 port = os.getenv("PORT")
 
-conn = None
  
 # --- Get data from database ---
 async def get_schedule_data(chatid: int, weektype: str, day: str, time: str):
     """Gets value of `chatid` - id of chat that linked with group\n
     Return linked group\`s schedule as JSON object"""
 
+    conn = None
+    
     # Check sql request
     if await kapcha(chatid, "chatID") == False:
         print("incorect id")
@@ -60,6 +61,9 @@ async def get_schedule_data(chatid: int, weektype: str, day: str, time: str):
 
 async def get_chats():
     """Return chats\`s id as array"""
+
+    conn = None
+
     try:
         conn = psycopg2.connect(
             host=host,

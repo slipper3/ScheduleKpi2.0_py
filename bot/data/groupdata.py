@@ -13,13 +13,14 @@ user = os.getenv("USER")
 password = os.getenv("PASSWORD")
 port = os.getenv("PORT")
 
-conn = None
 
 # --- Save group data ---
 async def db_save_group(chatid, groupname):
     """Gets value of `chatid` - id of chat that will be linked with group
     and `groupname` - name of that group, the same as specified on the site\n
     Save chatid and groupname to database"""
+
+    conn = None
 
     # Check sql request
     if await kapcha(groupname, "groupName") == False:
@@ -55,6 +56,8 @@ async def db_remove_group(chatid) -> None:
     """Gets value of `chatid` - id of chat that was linked with group\n
     Delete row in database that contain `chatid`"""
 
+    conn = None
+
     # Check sql request
     if await kapcha(chatid, "chatID") == False:
         return False
@@ -84,6 +87,8 @@ async def db_get_group(chatid):
     """Gets value of `chatid` - id of chat that is linked with group\n
     Show `groupname` in row contain `chatid`"""
 
+    conn = None
+
     # Check sql request
     if await kapcha(chatid, "chatID") == False:
         return False
@@ -110,6 +115,8 @@ async def db_get_group(chatid):
             conn.close()
 
 async def db_condig_emoji(chatid) -> str:
+
+    conn = None
 
     # Check sql request
     if await kapcha(chatid, "chatID") == False:
