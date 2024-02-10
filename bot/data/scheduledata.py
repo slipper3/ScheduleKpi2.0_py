@@ -16,6 +16,7 @@ user = os.getenv("USER")
 password = os.getenv("PASSWORD")
 port = os.getenv("PORT")
 
+conn = None
  
 # --- Get data from database ---
 async def get_schedule_data(chatid: int, weektype: str, day: str, time: str):
@@ -53,8 +54,9 @@ async def get_schedule_data(chatid: int, weektype: str, day: str, time: str):
         print("Request error", er)
         return None
     finally:
-        conn.commit()
-        conn.close()
+        if conn is not None:
+            conn.commit()
+            conn.close()
 
 async def get_chats():
     """Return chats\`s id as array"""
@@ -74,5 +76,6 @@ async def get_chats():
         print("Request error", er)
         return None
     finally:
-        conn.commit()
-        conn.close()
+        if conn is not None:
+            conn.commit()
+            conn.close()

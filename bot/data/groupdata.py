@@ -13,6 +13,8 @@ user = os.getenv("USER")
 password = os.getenv("PASSWORD")
 port = os.getenv("PORT")
 
+conn = None
+
 # --- Save group data ---
 async def db_save_group(chatid, groupname):
     """Gets value of `chatid` - id of chat that will be linked with group
@@ -43,8 +45,9 @@ async def db_save_group(chatid, groupname):
         print(er)
         return False
     finally:
-        conn.commit()
-        conn.close()
+        if conn is not None:
+            conn.commit()
+            conn.close()
 
 
 # --- Remove group data ---
@@ -72,8 +75,9 @@ async def db_remove_group(chatid) -> None:
         print(er)
         return False
     finally:
-        conn.commit()
-        conn.close()
+        if conn is not None:
+            conn.commit()
+            conn.close()
 
 # --- Get group data ---
 async def db_get_group(chatid):
@@ -101,8 +105,9 @@ async def db_get_group(chatid):
         print("query error", er)
         return None
     finally:
-        conn.commit()
-        conn.close()
+        if conn is not None:
+            conn.commit()
+            conn.close()
 
 async def db_condig_emoji(chatid) -> str:
 
@@ -129,5 +134,6 @@ async def db_condig_emoji(chatid) -> str:
         print("query error", er)
         return None
     finally:
-        conn.commit()
-        conn.close()
+        if conn is not None:
+            conn.commit()
+            conn.close()
