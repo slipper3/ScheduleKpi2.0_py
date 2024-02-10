@@ -14,11 +14,11 @@ admin_router = Router()
 
 @admin_router.startup()
 async def startup(bot: Bot) -> None:
-    bot.send_message(chat_id=int(os.getenv("ADMIN_ID")), text="Bot is online")
+    await bot.send_message(chat_id=int(os.getenv("ADMIN_ID")), text="Bot is online")
 
 @admin_router.shutdown()
 async def shoutdown(bot: Bot) -> None:
-    bot.send_message(chat_id=int(os.getenv("ADMIN_ID")), text="Bot is ofline")
+    await bot.send_message(chat_id=int(os.getenv("ADMIN_ID")), text="Bot is ofline")
 
 # @admin_router.message(Command("shutdown"))
 # async def shutbot(message: types.Message):
