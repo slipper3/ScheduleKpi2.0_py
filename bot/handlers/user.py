@@ -72,11 +72,11 @@ async def web(message: types.Message) -> None:
 
 
 @user_router.message(Command("report"))
-async def set_group(message: types.Message, state: FSMContext) -> None:
+async def get_report(message: types.Message, state: FSMContext) -> None:
     await state.set_state(states.group)
     await message.answer("Напишіть своє повідомленя 📝")
 @user_router.message(states.group)
-async def save_group(message: types.Message, state: FSMContext) -> None:
+async def send_report(message: types.Message, state: FSMContext) -> None:
     await bot.send_message(chat_id=int(os.getenv("ADMIN_ID")), text=f"#report\n\nUserid=<code>{message.from_user.id}</code>\nUsername={message.from_user.first_name} {message.from_user.last_name}\nUsername=<code>{message.from_user.username}</code>\nChatid=<code>{message.chat.id}</code>\n\n{message.text}", parse_mode="HTML")
     await message.answer("Ваше повідомлення було надіслано розробнику.")
     await state.clear()

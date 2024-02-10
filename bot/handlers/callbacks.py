@@ -1,4 +1,6 @@
 from aiogram import F, Router, types
+from aiogram.fsm.context import FSMContext
+
 from bot.data.groupdata import db_condig_emoji
 
 from bot.handlers.user import get_group, remove_group, set_group, web
@@ -34,8 +36,8 @@ async def call(callback: types.CallbackQuery):
     await callback.answer()
 
 @callback_router.callback_query(F.data == "set")
-async def call(callback: types.CallbackQuery):
-    await set_group(callback.message)
+async def call(callback: types.CallbackQuery, state: FSMContext):
+    await set_group(callback.message, state)
     await callback.answer()
 
 @callback_router.callback_query(F.data == "get")
