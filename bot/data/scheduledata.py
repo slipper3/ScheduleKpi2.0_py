@@ -24,11 +24,6 @@ async def get_schedule_data(chatid: int, weektype: str, day: str, time: str):
 
     conn = None
     
-    # Check sql request
-    if await kapcha(chatid, "chatID") == False:
-        print("incorect id")
-        return False
-    
     # get weektype
     #weektype = "firstWeek"
 

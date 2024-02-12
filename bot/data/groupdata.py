@@ -25,8 +25,6 @@ async def db_save_group(chatid, groupname):
     # Check sql request
     if await kapcha(groupname, "groupName") == False:
         return False
-    if await kapcha(chatid, "chatID") == False:
-        return False
     
     try:
         conn = psycopg2.connect(
@@ -58,10 +56,6 @@ async def db_remove_group(chatid) -> None:
 
     conn = None
 
-    # Check sql request
-    if await kapcha(chatid, "chatID") == False:
-        return False
-
     try:
         conn = psycopg2.connect(
             host=host,
@@ -88,10 +82,6 @@ async def db_get_group(chatid):
     Show `groupname` in row contain `chatid`"""
 
     conn = None
-
-    # Check sql request
-    if await kapcha(chatid, "chatID") == False:
-        return False
     
     try:
         conn = psycopg2.connect(
@@ -117,10 +107,6 @@ async def db_get_group(chatid):
 async def db_condig_emoji(chatid) -> str:
 
     conn = None
-
-    # Check sql request
-    if await kapcha(chatid, "chatID") == False:
-        return False
     
     try:
         conn = psycopg2.connect(
