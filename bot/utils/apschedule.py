@@ -7,7 +7,10 @@ from aiogram import Bot, types
 
 import random
 from bot.utils.stikers import stickers
+from bot.utils.log_conf import setup_logging
 
+import os
+from dotenv import load_dotenv
 
 template = {
     0: "Пн",
@@ -19,8 +22,11 @@ template = {
     6: "Нд"
 }
 
+logger = setup_logging()
 
-async def schedul(time: str, bot: Bot):
+load_dotenv()
+
+async def schedul(time: str, bot: Bot, admin: bool = False):
     """Send message to all registered in database chats\n
     Take lesson for each grgoup in given time
     Also sent stickers if thay dont disable"""
@@ -38,9 +44,12 @@ async def schedul(time: str, bot: Bot):
         weektype = "secondWeek"
     else: weektype = "firstWeek"
 
-    chats = await get_chats()
-    for chat in chats[0]:
-        sched = await get_schedule_data(chatid=chat, weektype="firstWeek", day=template[day], time=time)
+    logger.info(f"Schedule acted with data: weektype-{weektype}, day-{template[day]}, time-{time}")
+    if admin == False:
+        chats = await get_chats()
+    else: chats = int(os.getenv("ADMIN_ID"))
+    for chat in chats:
+        sched = await get_schedule_data(chatid=chat[0], weektype=weektype, day=template[day], time=time)
         for pair in sched:
             if pair[2] != "" and pair[1] != "" and pair[0] != "":
                 text = [

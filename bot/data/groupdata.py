@@ -5,6 +5,8 @@ from bot.data.kapcha import kapcha
 import os
 from dotenv import load_dotenv
 
+from bot.utils.log_conf import setup_logging
+
 load_dotenv()
 
 host = os.getenv("HOST")
@@ -13,6 +15,7 @@ user = os.getenv("USER")
 password = os.getenv("PASSWORD")
 port = os.getenv("PORT")
 
+logger = setup_logging()
 
 # --- Save group data ---
 async def db_save_group(chatid, groupname):
@@ -40,8 +43,7 @@ async def db_save_group(chatid, groupname):
                            (chatid, groupname, groupname))
         return True
     except Exception as er:
-        #log error
-        print(er)
+        logger.error(f"Error coused in db_save_group: {er}")
         return False
     finally:
         if conn is not None:
@@ -68,8 +70,7 @@ async def db_remove_group(chatid) -> None:
             cursor.execute("""DELETE FROM public.telegram WHERE chatid = (%s)""", (chatid,))
         return True
     except Exception as er:
-        #log error
-        print(er)
+        logger.error(f"Error coused in db_remove_group: {er}")
         return False
     finally:
         if conn is not None:
@@ -96,8 +97,7 @@ async def db_get_group(chatid):
             result = cursor.fetchone()
         return result[0]
     except Exception as er:
-        #log error
-        print("query error", er)
+        logger.error(f"Error coused in db_get_group: {er}")
         return None
     finally:
         if conn is not None:
@@ -123,8 +123,7 @@ async def db_condig_emoji(chatid) -> str:
             cursor.execute("""UPDATE public.telegram SET emoji = (%s::boolean) WHERE chatid = (%s)""", (state, chatid))
         return str(state)
     except Exception as er:
-        #log error
-        print("query error", er)
+        logger.error(f"Error coused in db_condig_emoji: {er}")
         return None
     finally:
         if conn is not None:

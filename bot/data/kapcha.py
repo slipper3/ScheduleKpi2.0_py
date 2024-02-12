@@ -1,5 +1,4 @@
 template = {
-    "chatID": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
     "groupName": "--"
 }
 
@@ -11,8 +10,6 @@ async def kapcha(user_request, type: str):
     `input_string` - String need to be checked.\n
     `type` - what kinde of data need to check.\n
     Existig data:\n
-        - chatID\n
-        `return` True, if all char from request exist in alowed_chars, else False.\n
         - groupName\n
         `return` True, if request dosnt contain "--", else False.\n
     """ 

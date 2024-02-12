@@ -8,6 +8,8 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 
+from bot.utils.log_conf import setup_logging
+
 load_dotenv()
 
 host = os.getenv("HOST")
@@ -16,6 +18,7 @@ user = os.getenv("USER")
 password = os.getenv("PASSWORD")
 port = os.getenv("PORT")
 
+logger = setup_logging()
  
 # --- Get data from database ---
 async def get_schedule_data(chatid: int, weektype: str, day: str, time: str):
@@ -23,9 +26,6 @@ async def get_schedule_data(chatid: int, weektype: str, day: str, time: str):
     Return linked group\`s schedule as JSON object"""
 
     conn = None
-    
-    # get weektype
-    #weektype = "firstWeek"
 
     try:
         conn = psycopg2.connect(
@@ -47,7 +47,7 @@ async def get_schedule_data(chatid: int, weektype: str, day: str, time: str):
             result = cursor.fetchall()
         return result
     except Exception as er:
-        print("Request error", er)
+        logger.error(f"Error coused in get_schedule_data: {er}")
         return None
     finally:
         if conn is not None:
@@ -72,7 +72,7 @@ async def get_chats():
             result = cursor.fetchall()
         return result
     except Exception as er:
-        print("Request error", er)
+        logger.error(f"Error coused in get_chats: {er}")
         return None
     finally:
         if conn is not None:
