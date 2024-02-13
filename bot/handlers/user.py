@@ -34,13 +34,13 @@ async def menu(message: types.Message) -> None:
     await message.answer(await menu_text(), reply_markup=await menu_keyboard(), parse_mode='HTML')
 
 
-class states(StatesGroup):
+class gstates(StatesGroup):
     group = State()
 @user_router.message(Command("set"))
 async def set_group(message: types.Message, state: FSMContext) -> None:
-    await state.set_state(states.group)
+    await state.set_state(gstates.group)
     await message.answer("Вкажіть групу")
-@user_router.message(states.group)
+@user_router.message(gstates.group)
 async def save_group(message: types.Message, state: FSMContext) -> None:
     if await db_save_group(message.chat.id, message.text):
         await message.answer("Група успішно збережена")
@@ -75,13 +75,13 @@ async def config_emoji(message: types.Message) -> None:
 async def web(message: types.Message) -> None:
     await message.answer("Тут буде лінк на сайт")
 
-class states(StatesGroup):
+class rstates(StatesGroup):
     rep = State()
 @user_router.message(Command("report"))
 async def get_report(message: types.Message, state: FSMContext) -> None:
-    await state.set_state(states.rep)
+    await state.set_state(rstates.rep)
     await message.answer("Напишіть своє повідомленя 📝")
-@user_router.message(states.rep)
+@user_router.message(rstates.rep)
 async def send_report(message: types.Message, state: FSMContext) -> None:
     await bot.send_message(chat_id=int(os.getenv("ADMIN_ID")), text=f"#report\n\nUserid=<code>{message.from_user.id}</code>\nUsername={message.from_user.first_name} {message.from_user.last_name}\nUsername=<code>{message.from_user.username}</code>\nChatid=<code>{message.chat.id}</code>\n\n{message.text}", parse_mode="HTML")
     await message.answer("Ваше повідомлення було надіслано розробнику.")

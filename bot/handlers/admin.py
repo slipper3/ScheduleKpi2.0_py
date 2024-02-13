@@ -45,4 +45,4 @@ def shutdown_handler(dp: Dispatcher):
 async def test_(message: types.Message):
      if message.from_user.id == int(os.getenv("ADMIN_ID")):
         test = await schedul(time="10:25", bot=bot)
-        await message.answer(f"Schedul data for: curent day, current week\n{test}")
+        await message.answer(f"Schedul data for: curent day, current week, time: 10:25\n{test}")

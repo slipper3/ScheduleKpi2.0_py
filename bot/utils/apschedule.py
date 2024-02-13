@@ -45,11 +45,15 @@ async def schedul(time: str, bot: Bot, admin: bool = False):
     else: weektype = "firstWeek"
 
     logger.info(f"Schedule acted with data: weektype-{weektype}, day-{template[day]}, time-{time}")
-    if admin == False:
-        chats = await get_chats()
-    else: chats = int(os.getenv("ADMIN_ID"))
+    chats = await get_chats()
     for chat in chats:
+        if chat[0] == None:
+            logger.warning(f"Chat id id None")
+            continue
         sched = await get_schedule_data(chatid=chat[0], weektype=weektype, day=template[day], time=time)
+        if sched == None: # If schedule wasnt filled
+            logger.warning(f"No schedule for chat {chat[0]}")
+            continue
         for pair in sched:
             if pair[2] != "" and pair[1] != "" and pair[0] != "":
                 text = [
@@ -58,27 +62,27 @@ async def schedul(time: str, bot: Bot, admin: bool = False):
                             f"🔸Разом з {pair[1]}\n",
                             f"<a href='{pair[2]}'>Посилання на пару</a>\n"
                         ]
-                await bot.send_message(chat_id=chat, text='\n'.join(text), parse_mode='HTML')
-                await bot.send_sticker(chat_id=chat, sticker=stickers[random.randint(0,len(stickers)-1)])
+                await bot.send_message(chat_id=chat[0], text='\n'.join(text), parse_mode='HTML')
+                await bot.send_sticker(chat_id=chat[0], sticker=stickers[random.randint(0,len(stickers)-1)])
             elif pair[1] != "" and pair[0] != "":
                 text = [
                             f"💃 <b>О {time} вас чекає пара</b> 🕺\n",
                             f"🔸{pair[0]})",
                             f"🔸Разом з {pair[1]}\n",
                         ]
-                await bot.send_message(chat_id=chat, text='\n'.join(text), parse_mode='HTML')
-                await bot.send_sticker(chat_id=chat, sticker=stickers[random.randint(0,len(stickers)-1)])
+                await bot.send_message(chat_id=chat[0], text='\n'.join(text), parse_mode='HTML')
+                await bot.send_sticker(chat_id=chat[0], sticker=stickers[random.randint(0,len(stickers)-1)])
             elif pair[0] != "":
                 text = [
                             f"💃 <b>О {time} вас чекає пара</b> 🕺\n",
                             f"🔸{pair[0]})",
                         ]
-                await bot.send_message(chat_id=chat, text='\n'.join(text), parse_mode='HTML')
-                await bot.send_sticker(chat_id=chat, sticker=stickers[random.randint(0,len(stickers)-1)])
+                await bot.send_message(chat_id=chat[0], text='\n'.join(text), parse_mode='HTML')
+                await bot.send_sticker(chat_id=chat[0], sticker=stickers[random.randint(0,len(stickers)-1)])
             else:
                 text = [
                             f"💃 <b>О {time} вас чекає пара</b> 🕺\n",
                             f"🔸{pair[0]})",
                         ]
-                await bot.send_message(chat_id=chat, text='\n'.join(text), parse_mode='HTML')
-                await bot.send_sticker(chat_id=chat, sticker=stickers[random.randint(0,len(stickers)-1)])
+                await bot.send_message(chat_id=chat[0], text='\n'.join(text), parse_mode='HTML')
+                await bot.send_sticker(chat_id=chat[0], sticker=stickers[random.randint(0,len(stickers)-1)])
