@@ -5,6 +5,7 @@ from bot.handlers.user import user_router
 from bot.handlers.callbacks import callback_router
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from aiocron import crontab
 from bot.utils.apschedule import schedul
 from bot.utils.log_conf import setup_logging
 
@@ -21,11 +22,9 @@ async def register_routers(dp: Dispatcher) -> None:
         logger.error(f"Error while including routers: {er}")
 
 
-async def main() -> None:
-    """ Starting bot """
-    # register scheduls
+async def register_scheds(sched: AsyncIOScheduler):
+    """ Adding jobs """
     try:
-        sched = AsyncIOScheduler()
         sched.add_job(schedul, 'cron', hour=8, minute=25, args=['8:30', bot])
         sched.add_job(schedul, 'cron', hour=10, minute=20, args=['10:25', bot])
         sched.add_job(schedul, 'cron', hour=12, minute=15, args=['12:20', bot])
@@ -35,11 +34,17 @@ async def main() -> None:
     except Exception as er:
         logger.error(f"Error while adding scheds: {er}")
 
+async def main() -> None:
+    """ Starting bot """
+
+    sched = AsyncIOScheduler(timezone='Europe/Kiev')
+    await register_scheds(sched)
     dp = Dispatcher()
     await register_routers(dp)
     shutdown_handler(dp)
 
     try:
+        sched.start()
         await dp.start_polling(bot)
     except Exception as er:
         logger.error(f"Error in dp.start_polling(bot): {er}")

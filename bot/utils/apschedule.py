@@ -40,7 +40,7 @@ async def schedul(time: str, bot: Bot, admin: bool = False):
     week = current.isocalendar()[1] 
 
     weektype = ""
-    if week % 2 == 0:
+    if week % 2 != 0:
         weektype = "secondWeek"
     else: weektype = "firstWeek"
 

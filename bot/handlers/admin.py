@@ -1,5 +1,6 @@
 # --- This file contains all admins commansds ---
 import sys
+import psycopg2
 from bot.data.scheduledata import get_chats, get_schedule_data
 from bot.utils.apschedule import schedul
 from bot.utils.log_conf import setup_logging
@@ -45,4 +46,25 @@ def shutdown_handler(dp: Dispatcher):
 async def test_(message: types.Message):
      if message.from_user.id == int(os.getenv("ADMIN_ID")):
         test = await schedul(time="10:25", bot=bot)
-        await message.answer(f"Schedul data for: curent day, current week, time: 10:25\n{test}")
+
+@admin_router.message(Command("db_test"))
+async def db_test(message: types.Message):
+    if message.from_user.id == int(os.getenv("ADMIN_ID")):
+        host = os.getenv("HOST")
+        dbname = os.getenv("DB_NAME")
+        user = os.getenv("USER")
+        password = os.getenv("PASSWORD")
+        port = os.getenv("PORT")
+        try:
+            conn = psycopg2.connect(
+                host=host,
+                dbname=dbname,
+                user=user,
+                password=password,
+                port=port
+            )
+            if conn != None: await message.answer(f"Connection is established")
+            conn.commit()
+            conn.close()
+        except Exception as er:
+            await message.answer(f"Error when connecting: {er}")
