@@ -58,7 +58,7 @@ async def schedul(time: str, bot: Bot, admin: bool = False):
             if pair[2] != "" and pair[1] != "" and pair[0] != "":
                 text = [
                             f"💃 <b>О {time} вас чекає пара</b> 🕺\n",
-                            f"🔸{pair[0]})",
+                            f"🔸{pair[0]}",
                             f"🔸Разом з {pair[1]}\n",
                             f"<a href='{pair[2]}'>Посилання на пару</a>\n"
                         ]
@@ -67,7 +67,7 @@ async def schedul(time: str, bot: Bot, admin: bool = False):
             elif pair[1] != "" and pair[0] != "":
                 text = [
                             f"💃 <b>О {time} вас чекає пара</b> 🕺\n",
-                            f"🔸{pair[0]})",
+                            f"🔸{pair[0]}",
                             f"🔸Разом з {pair[1]}\n",
                         ]
                 await bot.send_message(chat_id=chat[0], text='\n'.join(text), parse_mode='HTML')
@@ -75,14 +75,14 @@ async def schedul(time: str, bot: Bot, admin: bool = False):
             elif pair[0] != "":
                 text = [
                             f"💃 <b>О {time} вас чекає пара</b> 🕺\n",
-                            f"🔸{pair[0]})",
+                            f"🔸{pair[0]}",
                         ]
                 await bot.send_message(chat_id=chat[0], text='\n'.join(text), parse_mode='HTML')
                 await bot.send_sticker(chat_id=chat[0], sticker=stickers[random.randint(0,len(stickers)-1)])
             else:
                 text = [
                             f"💃 <b>О {time} вас чекає пара</b> 🕺\n",
-                            f"🔸{pair[0]})",
+                            f"🔸{pair[0]}",
                         ]
                 await bot.send_message(chat_id=chat[0], text='\n'.join(text), parse_mode='HTML')
                 await bot.send_sticker(chat_id=chat[0], sticker=stickers[random.randint(0,len(stickers)-1)])

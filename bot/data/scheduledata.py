@@ -1,7 +1,7 @@
 # --- This file is responsible for getting data from database ---
 
 import psycopg2
-from bot.data.kapcha import kapcha
+from bot.data.escape import kapcha
 from datetime import datetime
 
 # --- Load database config ---

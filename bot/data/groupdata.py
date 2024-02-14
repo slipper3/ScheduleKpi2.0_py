@@ -1,6 +1,6 @@
 # --- File is responsible for saving university group for each telegram group ---
 import psycopg2
-from bot.data.kapcha import kapcha
+from bot.data.escape import pg_escape_string
 # --- Load database config ---
 import os
 from dotenv import load_dotenv
@@ -21,14 +21,11 @@ logger = setup_logging()
 async def db_save_group(chatid, groupname):
     """Gets value of `chatid` - id of chat that will be linked with group
     and `groupname` - name of that group, the same as specified on the site\n
-    Save chatid and groupname to database"""
+    If groupname already exist return false
+    else save chatid and groupname to database"""
 
     conn = None
-
-    # Check sql request
-    if await kapcha(groupname, "groupName") == False:
-        return False
-    
+    escaped = pg_escape_string(groupname)
     try:
         conn = psycopg2.connect(
             host=host,
@@ -38,9 +35,11 @@ async def db_save_group(chatid, groupname):
             port=port
         )
         with conn.cursor() as cursor:
-            cursor.execute("""INSERT INTO public.telegram(chatid, groupname) VALUES (%s, %s)
-                           ON CONFLICT (chatid) DO UPDATE SET groupname = (%s)""",
-                           (chatid, groupname, groupname))
+            cursor.execute("""SELECT groupname FROM public.telegram WHERE groupname = (%s)""", (escaped,))
+            resoult = cursor.fetchone()
+            if resoult == None:
+                cursor.execute("""INSERT INTO public.telegram(chatid, groupname) VALUES (%s, %s)""", (chatid, escaped))
+            else: return False
         return True
     except Exception as er:
         logger.error(f"Error coused in db_save_group: {er}")
@@ -50,6 +49,54 @@ async def db_save_group(chatid, groupname):
             conn.commit()
             conn.close()
 
+# --- Save pass ---
+async def db_set_password(chatid, pasword: str):
+    """"""
+
+    conn = None
+    escaped = pg_escape_string(pasword)
+    try:
+        conn = psycopg2.connect(
+            host=host,
+            dbname=dbname,
+            user=user,
+            password=password,
+            port=port
+        )
+        with conn.cursor() as cursor:
+            cursor.execute("""INSERT INTO public.telegram(password) VALUES (%s) WHERE chatid = (%s)""", (escaped, chatid))
+        return True
+    except Exception as er:
+        return False
+    finally:
+        if conn is not None:
+            conn.commit()
+            conn.close()
+
+# --- Get Pass ---
+async def db_get_password(chatid):
+    """"""
+
+    conn = None
+
+    try:
+        conn = psycopg2.connect(
+            host=host,
+            dbname=dbname,
+            user=user,
+            password=password,
+            port=port
+        )
+        with conn.cursor() as cursor:
+            cursor.execute("""SELECT password FROM public.telegram WHERE chatid = (%s)""", (chatid,))
+            result = cursor.fetchone()
+            return result[0]
+    except Exception as er:
+        return False
+    finally:
+        if conn is not None:
+            conn.commit()
+            conn.close()
 
 # --- Remove group data ---
 async def db_remove_group(chatid) -> None:
