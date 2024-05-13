@@ -1,0 +1,8 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = git@github.com:slipper3/SheduleKpi2.0_py.git
+	fetch = +refs/heads/*:refs/remotes/origin/*

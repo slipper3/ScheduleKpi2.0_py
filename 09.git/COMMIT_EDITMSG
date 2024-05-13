@@ -1,0 +1,10 @@
+workig version from VM
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Committer: root <root@telegram-bot-scheuler.europe-north1-a.c.telegram-bot-scheduler-413909.internal>
+#
+# On branch main
+# Changes to be committed:
+#	modified:   bot/utils/apschedule.py
+#

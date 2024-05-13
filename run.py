@@ -5,6 +5,7 @@ from bot.handlers.user import user_router
 from bot.handlers.callbacks import callback_router
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from aiocron import crontab
 from bot.utils.apschedule import schedul
 from bot.utils.log_conf import setup_logging
 
